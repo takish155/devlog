@@ -1,5 +1,42 @@
 {
+  "Header": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
   "HomePage": {
     "title": "Home Page"
+  },
+  "SignUpPage": {
+    "title": "Create your account",
+    "description": "Sign up to get your account up and start interacting with other users.",
+    "username": "Username",
+    "email": "Email",
+    "displayName": "Display Name",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Sign Up",
+    "alreadyHave": "Already have an account",
+    "success": {
+      "title": "Account created",
+      "description": "Your account has been created successfully, Welcome to our community!"
+    },
+    "errors": {
+      "usernameExists": "Username already exists",
+      "emailExists": "Email already exists",
+      "minUsernameError": "Username must be at least 3 characters long",
+      "maxUsernameError": "Username must be at most 20 characters long",
+      "minDisplayNameError": "Display name must be at least 3 characters long",
+      "maxDisplayNameError": "Display name must be at most 20 characters long",
+      "invalidUsernameKeyError": "Username must contain only letters, numbers, and underscores",
+      "invalidEmailError": "Invalid email",
+      "maxEmailError": "Email must be at most 100 characters long",
+      "minPasswordError": "Password must be at least 6 characters long",
+      "maxPasswordError": "Password must be at most 100 characters long",
+      "passwordMatchError": "Passwords do not match, please check your passwords and try again",
+      "error": "Error",
+      "signUpError": "An error occurred while signing up, please try again later",
+      "errorDescription": "An error occurred while processing your request, please try again later",
+      "invalidData": "Invalid data provided, please check your data and try again"
+    }
   }
 }

@@ -5,6 +5,9 @@ import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { Poppins, Noto_Sans } from "next/font/google";
 import "@/app/globals.css";
+import Header from "@/components/global/header/Header";
+import QueryProvider from "@/contexts/QueryProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const englishFont = Poppins({
   variable: "--font-english",
@@ -19,7 +22,7 @@ const japaneseFont = Noto_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Template",
+  title: "DevLog",
   description: "",
 };
 
@@ -48,9 +51,13 @@ export default async function LocaleLayout({
           japaneseFont.variable
         } antialiased ${locale === "ja" ? "font-japanese" : "font-english"}`}
       >
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        <QueryProvider>
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            {children}
+            <Toaster />
+          </NextIntlClientProvider>
+        </QueryProvider>
       </body>
     </html>
   );
