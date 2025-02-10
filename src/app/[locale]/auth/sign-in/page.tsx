@@ -1,4 +1,4 @@
-import SignUpForm from "@/components/forms/auth/SignUpForm";
+import SignInForm from "@/components/forms/auth/SignInForm";
 import {
   Card,
   CardContent,
@@ -10,8 +10,8 @@ import Main from "@/components/ui/main";
 import { useTranslations } from "next-intl";
 import React from "react";
 
-const SignUpPage = () => {
-  const t = useTranslations("SignUpPage");
+const SignInPage = () => {
+  const t = useTranslations("SignInPage");
 
   return (
     <Main>
@@ -23,11 +23,11 @@ const SignUpPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SignUpForm />
+          <SignInForm />
         </CardContent>
       </Card>
     </Main>
   );
 };
 
-export default SignUpPage;
+export default SignInPage;

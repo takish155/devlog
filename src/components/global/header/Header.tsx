@@ -5,6 +5,7 @@ import GuestNav from "./GuestNav";
 import { SearchInput } from "./SearchInput";
 import MobileSearch from "./mobile/MobileSearch";
 import { auth } from "@/auth";
+import UserNav from "./user/UserNav";
 
 const Header = async () => {
   const session = await auth();
@@ -24,7 +25,7 @@ const Header = async () => {
         </div>
         <nav className="flex gap-2">
           <MobileSearch />
-          {session ? session.user?.email : <GuestNav />}
+          {session ? <UserNav session={session} /> : <GuestNav />}
         </nav>
       </div>
       <Separator />

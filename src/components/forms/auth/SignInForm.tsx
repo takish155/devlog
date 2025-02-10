@@ -1,18 +1,18 @@
 "use client";
 
-import useHandleSignUp from "@/hooks/auth/useHandleSignUp";
 import React from "react";
-import InputContainer from "../ui/input-cotainer";
 import { useTranslations } from "next-intl";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { Link } from "@/i18n/routing";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import InputContainer from "@/components/ui/input-cotainer";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import useHandleSignIn from "@/hooks/auth/useHandleSignIn";
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const { register, errors, handleSubmit, serverResponse, mutate, isPending } =
-    useHandleSignUp();
-  const t = useTranslations("SignUpPage");
+    useHandleSignIn();
+  const t = useTranslations("SignInPage");
 
   return (
     <form
@@ -33,22 +33,7 @@ const SignUpForm = () => {
       >
         <Input placeholder="johndoe_123" {...register("username")} />
       </InputContainer>
-      <InputContainer
-        label={t("displayName")}
-        id="displayName"
-        error={
-          errors.displayName ? t(errors.displayName.message as any) : undefined
-        }
-      >
-        <Input placeholder="John Doe" {...register("displayName")} />
-      </InputContainer>
-      <InputContainer
-        label={t("email")}
-        id="email"
-        error={errors.email ? t(errors.email.message as any) : undefined}
-      >
-        <Input placeholder="johndoe@gmail.com" {...register("email")} />
-      </InputContainer>
+
       <InputContainer
         label={t("password")}
         id="password"
@@ -58,19 +43,6 @@ const SignUpForm = () => {
           type="password"
           placeholder="********"
           {...register("password")}
-        />
-      </InputContainer>
-      <InputContainer
-        label={t("confirmPassword")}
-        id="confirmPassword"
-        error={
-          errors.confirmPassword ? t(errors.confirmPassword.message as any) : ""
-        }
-      >
-        <Input
-          type="password"
-          placeholder="********"
-          {...register("confirmPassword")}
         />
       </InputContainer>
 
@@ -83,9 +55,9 @@ const SignUpForm = () => {
           {t("submit")}
         </Button>
         <p className="text-xs my-5">OR</p>
-        <Link href="/auth/sign-in" className="w-full">
+        <Link href="/auth/sign-up" className="w-full">
           <Button variant={"outline"} type="button" className="w-full">
-            {t("alreadyHave")}
+            {t("noAccount")}
           </Button>
         </Link>
       </div>
@@ -93,4 +65,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignInForm;

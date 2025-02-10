@@ -1,10 +1,36 @@
 {
   "Header": {
     "signIn": "Sign In",
-    "signUp": "Sign Up"
+    "signUp": "Sign Up",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "toggleMenu": "Toggle Menu"
   },
   "HomePage": {
     "title": "Home Page"
+  },
+  "SignInPage": {
+    "title": "Sign In",
+    "description": "Sign in to your existing account",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign In",
+    "noAccount": "Don't have an account?",
+    "success": {
+      "title": "Signed in",
+      "description": "You have been signed in successfully, Welcome back!"
+    },
+    "errors": {
+      "invalidRequestBody": "Invalid request body, please check your data and try again",
+      "minUsernameError": "Invalid username",
+      "maxUsernameError": "Invalid username",
+      "minPasswordError": "Invalid password",
+      "maxPasswordError": "Invalid password",
+      "error": "Error",
+      "signInError": "An error occurred while signing in, please try again later",
+      "invalidCredentials": "Invalid username or password, please check your credentials and try again"
+    }
   },
   "SignUpPage": {
     "title": "Create your account",
