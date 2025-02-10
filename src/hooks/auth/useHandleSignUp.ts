@@ -31,6 +31,7 @@ const useHandleSignUp = () => {
           description: t("success.description"),
         });
         router.push("/");
+        router.refresh();
       }
     },
   });

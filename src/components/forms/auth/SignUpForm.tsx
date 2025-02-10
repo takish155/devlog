@@ -3,7 +3,6 @@
 import useHandleSignUp from "@/hooks/auth/useHandleSignUp";
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import InputContainer from "@/components/ui/input-cotainer";
 import { Input } from "@/components/ui/input";
@@ -74,21 +73,13 @@ const SignUpForm = () => {
         />
       </InputContainer>
 
-      <div className="flex flex-col items-center mt-10">
-        <Button
-          className="w-full"
-          type="submit"
-          disabled={isPending || serverResponse?.success}
-        >
-          {t("submit")}
-        </Button>
-        <p className="text-xs my-5">OR</p>
-        <Link href="/auth/sign-in" className="w-full">
-          <Button variant={"outline"} type="button" className="w-full">
-            {t("alreadyHave")}
-          </Button>
-        </Link>
-      </div>
+      <Button
+        className="w-full my-4"
+        type="submit"
+        disabled={isPending || serverResponse?.success}
+      >
+        {t("submit")}
+      </Button>
     </form>
   );
 };

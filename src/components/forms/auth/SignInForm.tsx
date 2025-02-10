@@ -46,20 +46,18 @@ const SignInForm = () => {
         />
       </InputContainer>
 
-      <div className="flex flex-col items-center mt-10">
+      <div className="flex flex-wrap">
+        <Link className="ml-auto mb-4" href="/auth/forgot-password" passHref>
+          <Button variant={"link"}>{t("forgotPassword")}</Button>
+        </Link>
         <Button
-          className="w-full"
+          size={"lg"}
+          className="w-full mb-4"
           type="submit"
           disabled={isPending || serverResponse?.success}
         >
           {t("submit")}
         </Button>
-        <p className="text-xs my-5">OR</p>
-        <Link href="/auth/sign-up" className="w-full">
-          <Button variant={"outline"} type="button" className="w-full">
-            {t("noAccount")}
-          </Button>
-        </Link>
       </div>
     </form>
   );

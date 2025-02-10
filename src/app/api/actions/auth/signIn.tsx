@@ -34,7 +34,7 @@ export default async function signIn(data: SignInSchema) {
         };
       }
 
-      throw new Error(error as any);
+      throw error;
     }
 
     return {
@@ -43,7 +43,7 @@ export default async function signIn(data: SignInSchema) {
       status: 200,
     };
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
 
     return {
       success: false,

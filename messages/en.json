@@ -16,13 +16,15 @@
     "username": "Username",
     "password": "Password",
     "submit": "Sign In",
-    "noAccount": "Don't have an account?",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account? <link>Sign Up!</link>",
     "success": {
       "title": "Signed in",
       "description": "You have been signed in successfully, Welcome back!"
     },
     "errors": {
       "invalidRequestBody": "Invalid request body, please check your data and try again",
+      "notSignedIn": "You are not signed in",
       "minUsernameError": "Invalid username",
       "maxUsernameError": "Invalid username",
       "minPasswordError": "Invalid password",
@@ -30,6 +32,10 @@
       "error": "Error",
       "signInError": "An error occurred while signing in, please try again later",
       "invalidCredentials": "Invalid username or password, please check your credentials and try again"
+    },
+    "signOut": {
+      "title": "Sign Out Success",
+      "description": "You have been signed out successfully, see you next time!"
     }
   },
   "SignUpPage": {
@@ -42,6 +48,7 @@
     "confirmPassword": "Confirm Password",
     "submit": "Sign Up",
     "alreadyHave": "Already have an account",
+    "haveAccount": "Have an account? <link>Sign In!</link>",
     "success": {
       "title": "Account created",
       "description": "Your account has been created successfully, Welcome to our community!"
