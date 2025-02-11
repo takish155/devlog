@@ -60,8 +60,9 @@ model Blog {
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   title     String
+  description String
   content   String
-  thumbnail String
+  thumbnail String?
   tags      String[]
 
   likes     BlogLike[]

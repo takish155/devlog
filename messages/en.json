@@ -5,7 +5,8 @@
     "profile": "Profile",
     "settings": "Settings",
     "signOut": "Sign Out",
-    "toggleMenu": "Toggle Menu"
+    "toggleMenu": "Toggle Menu",
+    "greeting": "Hello, {name}!"
   },
   "HomePage": {
     "title": "Home Page"
@@ -71,5 +72,31 @@
       "errorDescription": "An error occurred while processing your request, please try again later",
       "invalidData": "Invalid data provided, please check your data and try again"
     }
+  },
+  "CreateBlogPage": {
+    "title": "Create Blog",
+    "editor": "Editor",
+    "preview": "Preview",
+    "success": "Success",
+    "error": "Error",
+    "meta": {
+      "title": "Create Blog - Devlog"
+    },
+    "form": {
+      "error": "Error",
+      "title": "Title",
+      "content": "Content",
+      "description": "Description",
+      "submit": "Create Blog"
+    },
+    "server": {
+      "notAuthenticated": "You are not authenticated, please sign in to create a blog",
+      "error": "An error occurred while creating the blog, please try again later",
+      "invalidRequestBody": "Invalid request body, please check your data and try again",
+      "success": "Your blog has been created successfully"
+    }
+  },
+  "BlogPage": {
+    "updatedAt": "Updated at {date}"
   }
 }

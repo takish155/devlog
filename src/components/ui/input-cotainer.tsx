@@ -6,15 +6,17 @@ const InputContainer = ({
   label,
   error,
   id,
+  hideLabel,
 }: {
   children: ReactNode;
-  label: string;
+  label?: string;
   error?: string;
   id: string;
+  hideLabel?: boolean;
 }) => {
   return (
     <div className="mb-5">
-      <Label htmlFor={id}>{label}</Label>
+      {!hideLabel && <Label htmlFor={id}>{label}</Label>}
       {children}
       {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>

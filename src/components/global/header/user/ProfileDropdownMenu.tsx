@@ -14,6 +14,7 @@ import { Session } from "next-auth";
 import { useTranslations } from "next-intl";
 import useHandleSignOut from "@/hooks/auth/useHandleSignOut";
 import { Link } from "@/i18n/routing";
+import Profile from "@/components/ui/profile";
 
 const ProfileDropdownMenu = ({ session }: { session: Session }) => {
   const t = useTranslations("Header");
@@ -22,14 +23,13 @@ const ProfileDropdownMenu = ({ session }: { session: Session }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="pointer">
-        <Avatar>
-          <AvatarImage src={session.user?.image ?? ""} />
-          <AvatarFallback>? </AvatarFallback>
-        </Avatar>
+        <Profile src={session.user?.image ?? ""} />
         <p className="sr-only">{t("toggleMenu")}</p>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel className="px-5">
+          {t("greeting", { name: session.user.username })}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link href={`/users/${session.user.username}`}>{t("profile")}</Link>
