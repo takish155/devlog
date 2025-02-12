@@ -6,6 +6,7 @@
     "settings": "Settings",
     "signOut": "Sign Out",
     "toggleMenu": "Toggle Menu",
+    "createBlog": "Create Blog",
     "greeting": "Hello, {name}!"
   },
   "HomePage": {

@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Session } from "next-auth";
 import { useTranslations } from "next-intl";
 import useHandleSignOut from "@/hooks/auth/useHandleSignOut";
@@ -31,6 +30,9 @@ const ProfileDropdownMenu = ({ session }: { session: Session }) => {
           {t("greeting", { name: session.user.username })}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/blogs/create">{t("createBlog")}</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href={`/users/${session.user.username}`}>{t("profile")}</Link>
         </DropdownMenuItem>

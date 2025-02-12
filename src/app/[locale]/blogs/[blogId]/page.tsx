@@ -5,6 +5,7 @@ import getBlogById from "@/lib/fetcher/getBlogById";
 import Profile from "@/components/ui/profile";
 import { Link } from "@/i18n/routing";
 import { Separator } from "@/components/ui/separator";
+import BlogActions from "@/components/blogs/BlogActions";
 
 const BlogPage = async ({
   params,
@@ -42,7 +43,8 @@ const BlogPage = async ({
           </div>
         </div>
       </section>
-      <Separator className="mb-10" />
+      <BlogActions blogId={blogId} />
+      <Separator className="mb-10 mt-3" />
       <Markdown>{data?.content ?? ""}</Markdown>
     </Main>
   );

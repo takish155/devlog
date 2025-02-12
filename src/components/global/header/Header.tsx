@@ -16,7 +16,7 @@ const Header = async () => {
         <div className="flex items-center gap-5">
           <h1 className="font-bold text-2xl max-lg:text-xl max-sma:text-lg">
             <Link href="/">
-              <span className="text-primary">Dev</span>Log
+              <span className="text-primary">Dev</span>log
             </Link>
           </h1>
           <div className="max-lg:hidden">
