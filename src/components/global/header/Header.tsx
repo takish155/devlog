@@ -4,12 +4,10 @@ import { Separator } from "@/components/ui/separator";
 import GuestNav from "./GuestNav";
 import { SearchInput } from "./SearchInput";
 import MobileSearch from "./mobile/MobileSearch";
-import { auth } from "@/auth";
 import UserNav from "./user/UserNav";
+import Nav from "./Nav";
 
 const Header = async () => {
-  const session = await auth();
-
   return (
     <header className="top-0 sticky z-50 mb-6 bg-background">
       <div className="w-[95%] mx-auto py-4 flex justify-between items-center">
@@ -25,7 +23,7 @@ const Header = async () => {
         </div>
         <nav className="flex gap-2">
           <MobileSearch />
-          {session ? <UserNav session={session} /> : <GuestNav />}
+          <Nav />
         </nav>
       </div>
       <Separator />

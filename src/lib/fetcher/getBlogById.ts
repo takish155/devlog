@@ -17,6 +17,7 @@ export default async function getBlogById(blogId: string) {
           displayName: true,
           image: true,
           username: true,
+          id: true,
         },
       },
     },

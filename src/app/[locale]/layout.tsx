@@ -8,6 +8,8 @@ import "@/app/globals.css";
 import Header from "@/components/global/header/Header";
 import QueryProvider from "@/contexts/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { auth } from "@/auth";
+import { SessionProvider } from "@/contexts/SessionProvider";
 
 const englishFont = Poppins({
   variable: "--font-english",
@@ -42,7 +44,13 @@ export default async function LocaleLayout({
 
   // Providing all messages to the client
   // side is the easiest way to get started
-  const messages = await getMessages();
+  const messageRequest = getMessages();
+  const sessionRequest = auth();
+
+  const [messages, session] = await Promise.all([
+    messageRequest,
+    sessionRequest,
+  ]);
 
   return (
     <html lang={locale}>
@@ -52,11 +60,13 @@ export default async function LocaleLayout({
         } antialiased ${locale === "ja" ? "font-japanese" : "font-english"}`}
       >
         <QueryProvider>
-          <NextIntlClientProvider messages={messages}>
-            <Header />
-            {children}
-            <Toaster />
-          </NextIntlClientProvider>
+          <SessionProvider session={session}>
+            <NextIntlClientProvider messages={messages}>
+              <Header />
+              {children}
+              <Toaster />
+            </NextIntlClientProvider>
+          </SessionProvider>
         </QueryProvider>
       </body>
     </html>

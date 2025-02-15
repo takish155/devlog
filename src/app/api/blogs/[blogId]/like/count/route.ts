@@ -1,4 +1,5 @@
 import { prisma } from "@/../prisma/prisma";
+import { auth } from "@/auth";
 
 export type GetBlogLikeCountResponse =
   | {
@@ -6,6 +7,7 @@ export type GetBlogLikeCountResponse =
       message: string;
       data: {
         count: number;
+        userLike: boolean;
       };
       status: number;
     }
@@ -20,17 +22,53 @@ export async function GET(
   { params }: { params: Promise<{ blogId: string }> }
 ) {
   try {
-    const { blogId } = await params;
+    const sessionRequest = auth();
+    const [session, { blogId }] = await Promise.all([sessionRequest, params]);
 
-    const likeCount = await prisma.blogLike.count({
-      where: { blogId },
-    });
+    if (!session) {
+      const likeCount = await prisma.blogLike.count({
+        where: { blogId },
+      });
+
+      return Response.json({
+        success: true,
+        message: "Like count fetched successfully",
+        data: {
+          count: likeCount,
+          userLike: false,
+        },
+        status: 200,
+      });
+    }
+
+    const [userLike, likeCount] = await Promise.all([
+      prisma.blogLike.findFirst({
+        where: { blogId, userId: session.user?.id },
+      }),
+      // Having two same query might be bad but this should be fine for the performance
+      prisma.blogLike.count({
+        where: { blogId },
+      }),
+    ]);
+
+    if (!userLike) {
+      return Response.json({
+        success: true,
+        message: "Like count fetched successfully",
+        data: {
+          count: likeCount,
+          userLike: false,
+        },
+        status: 200,
+      });
+    }
 
     return Response.json({
       success: true,
       message: "Like count fetched successfully",
       data: {
         count: likeCount,
+        userLike: true,
       },
       status: 200,
     });

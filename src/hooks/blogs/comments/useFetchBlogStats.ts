@@ -29,7 +29,10 @@ const useFetchBlogStats = (blogId: string) => {
 
       return {
         commentCount: commentData.data.count,
-        likeCount: likeData.data.count,
+        like: {
+          count: likeData.data.count,
+          userLike: likeData.data.userLike,
+        },
       };
     },
   });

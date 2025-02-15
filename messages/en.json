@@ -88,7 +88,16 @@
       "title": "Title",
       "content": "Content",
       "description": "Description",
-      "submit": "Create Blog"
+      "submit": "Create Blog",
+      "errors": {
+        "titleEmptyError": "Title cannot be empty",
+        "contentEmptyError": "Content cannot be empty",
+        "minTitleError": "Title must be at least 3 characters long",
+        "maxTitleError": "Title must be at most 100 characters long",
+        "maxDescriptionError": "Description must be at most 300 characters long",
+        "minContentError": "Content must be at least 10 characters long",
+        "maxContentError": "Content must be at most 15000 characters long"
+      }
     },
     "server": {
       "notAuthenticated": "You are not authenticated, please sign in to create a blog",
@@ -97,7 +106,67 @@
       "success": "Your blog has been created successfully"
     }
   },
+  "EditBlogPage": {
+    "title": "Edit Blog",
+    "editor": "Editor",
+    "preview": "Preview",
+    "update": "Update Blog",
+    "meta": {
+      "title": "Edit {blogName} - Devlog"
+    },
+    "server": {
+      "errors": {
+        "title": "Error",
+        "invalidRequestBody": "Invalid request body, please check your data and try again",
+        "notAuthenticated": "You are not authenticated, please sign in to edit this blog",
+        "blogNotFound": "Blog not found, please check your blog if it exists",
+        "notAuthorized": "You are not authorized to edit this blog"
+      },
+      "success": {
+        "title": "Success",
+        "description": "Your blog has been updated successfully"
+      }
+    }
+  },
   "BlogPage": {
-    "updatedAt": "Updated at {date}"
+    "updatedAt": "Updated at {date}",
+    "edit": "Edit",
+    "comment": {
+      "title": "Comment ({count})",
+      "server": {
+        "errors": {
+          "title": "Error",
+          "notAuthenticated": "You are not authenticated, please sign in to write your thoughts about this blog",
+          "invalidRequestBody": "Invalid request body, please check your data and try again",
+          "parentCommentNotFound": "Parent comment not found, please check if it exists",
+          "blogNotFound": "Blog not found, please if it exists"
+        },
+        "success": {
+          "title": "Success",
+          "description": "Your comment has been posted successfully"
+        }
+      },
+      "form": {
+        "signIn": "Sign in to write your thoughts about this blog",
+        "submit": "Comment",
+        "placeholder": "Write your thoughts about this blog..."
+      }
+    },
+    "server": {
+      "errors": {
+        "title": "Error",
+        "notAuthenticated": "You are not authenticated, please sign in to like this blog",
+        "notFound": "Blog not found, please check if it exists"
+      },
+      "success": {
+        "liked": "You have liked this blog",
+        "unliked": "You have unliked this blog"
+      }
+    },
+    "preview": {
+      "noTitle": "No Title Provided",
+      "noDescription": "Try to provide some description for your blog",
+      "noContent": "It seems you haven't written anything about this blog yet"
+    }
   }
 }

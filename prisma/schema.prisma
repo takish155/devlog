@@ -85,6 +85,8 @@ model BlogLike {
   blogId String
 
   createdAt DateTime @default(now())
+
+  @@unique([userId, blogId])
 }
 
 model BlogComment {
@@ -119,6 +121,8 @@ model BlogCommentLike {
   commentId String
 
   createdAt DateTime @default(now())
+
+  @@unique([userId, commentId])
 }
 
 model Account {

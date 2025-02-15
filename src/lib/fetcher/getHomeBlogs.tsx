@@ -28,7 +28,7 @@ export type BlogCardProps = {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
+  thumbnail: string | null;
   createdAt: Date;
   likeCount: number;
   commentCount: number;

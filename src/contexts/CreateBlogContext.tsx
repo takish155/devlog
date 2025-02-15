@@ -2,7 +2,7 @@
 
 import useHandleCreateBlog, {
   UseHandleCreateBlog,
-} from "@/hooks/useHandleCreateBlog";
+} from "@/hooks/blogs/useHandleCreateBlog";
 import { createContext, useContext } from "react";
 
 const CreateBlogContext = createContext<UseHandleCreateBlog | null>(null);
