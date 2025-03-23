@@ -1,50 +1,71 @@
-import { prisma } from "@/../prisma/prisma";
+import { auth } from "@/auth";
+import getBlogCommentChildren from "@/lib/fetcher/getBlogCommentChildren";
+import getBlogComments from "@/lib/fetcher/getBlogComments";
+import { NextRequest } from "next/server";
+
+export interface BlogCommentCardProps {
+  likeCount: number;
+  content: string;
+  createdAt: Date;
+  childCount: number;
+  id: string;
+  user: {
+    id: string;
+    username: string;
+    displayName: string;
+    image: string;
+  };
+  likes: {
+    id: string;
+  }[];
+}
 
 export interface GetBlogCommentResponse {
   success: true;
   message: string;
-  data: {
-    likeCount: number;
-    content: string;
-    createdAt: Date;
-    user: {
-      id: string;
-      username: string;
-      displayName: string;
-      image: string;
-    };
-  }[];
+  data: BlogCommentCardProps[];
   status: number;
 }
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ blogId: string }> }
 ) {
   try {
-    const { blogId } = await params;
+    const sessionRequest = auth();
+    const [session, { blogId }] = await Promise.all([sessionRequest, params]);
 
-    const comment = await prisma.blogComment.findMany({
-      where: { blogId },
-      select: {
-        likeCount: true,
-        content: true,
-        createdAt: true,
-        user: {
-          select: {
-            id: true,
-            username: true,
-            displayName: true,
-            image: true,
-          },
-        },
-      },
+    const searchParams = req.nextUrl.searchParams;
+    const orderBy = searchParams.get("orderBy") ?? "likes";
+    const cursor = searchParams.get("cursor") ?? undefined;
+    const parentId = searchParams.get("parentId") ?? null;
+
+    if (parentId === "undefined" || parentId === "null" || !parentId) {
+      const comments = await getBlogComments({
+        blogId,
+        orderBy,
+        session,
+        cursor,
+      });
+
+      return Response.json({
+        success: true,
+        message: "Comments fetched successfully",
+        data: comments,
+        status: 200,
+      });
+    }
+
+    const comments = await getBlogCommentChildren({
+      parentId,
+      cursor,
+      session,
     });
 
     return Response.json({
       success: true,
-      message: "Comments fetched successfully",
-      data: comment,
+      message: "Comments children fetched successfully",
+      data: comments,
       status: 200,
     });
   } catch (error) {

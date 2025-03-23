@@ -1,65 +1,55 @@
 "use server";
 
-import { auth } from "@/auth";
-import { blogSchema, BlogSchema } from "@/schemas/blog.schema";
+import { BlogSchema } from "@/schemas/blog.schema";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/../prisma/prisma";
+import { handleMiddleware } from "@/middlewares/handleMiddleware";
+import authMiddleware from "@/middlewares/authMiddleware";
+import blogExistsMiddleware from "@/middlewares/blogs/blogExistsMiddleware";
+import blogOwnershipMiddleware from "@/middlewares/blogs/blogOwnershipMiddleware";
+import checkBlogBodyMiddleware from "@/middlewares/blogs/checkBlogBodyMiddleware";
+import { revalidateTag } from "next/cache";
 
 export default async function updateBlog(blogId: string, data: BlogSchema) {
   try {
-    const translation = getTranslations("EditBlogPage.server");
-    const sessionRequest = auth();
-
-    const [t, session] = await Promise.all([translation, sessionRequest]);
-
-    // Check if user is authenticated
-    if (!session)
-      return {
-        success: false,
-        message: t("errors.notAuthenticated"),
-        status: 401,
-      };
-
-    const blog = await prisma.blog.findUnique({
-      where: {
-        id: blogId,
+    const { pass, message, status } = await handleMiddleware({
+      middleware: [
+        authMiddleware,
+        blogExistsMiddleware,
+        blogOwnershipMiddleware,
+        checkBlogBodyMiddleware,
+      ],
+      data: {
+        blogId,
+        body: data,
       },
     });
-    // Check if blog exists
-    if (!blog)
-      return {
-        success: false,
-        message: t("errors.blogNotFound"),
-        status: 404,
-      };
-    // Check if user is the author of the blog
-    if (blog.authorId !== session.user?.id)
-      return {
-        success: false,
-        message: t("errors.notAuthorized"),
-        status: 403,
-      };
 
-    // Validate request body
-    const safeData = blogSchema.safeParse(data);
-    if (!safeData.success)
+    if (!pass) {
       return {
         success: false,
-        message: t("errors.invalidRequestBody"),
-        status: 400,
+        message: message,
+        status: status,
       };
+    }
 
-    // Update blog
-    await prisma.blog.update({
+    const translation = getTranslations("EditBlogPage.server");
+    const blogRequest = prisma.blog.update({
       where: {
         id: blogId,
       },
       data: {
-        title: safeData.data.title,
-        description: safeData.data.description,
-        content: safeData.data.content,
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        thumbnail: data.thumbnail ?? "",
       },
     });
+
+    const [t, blog] = await Promise.all([translation, blogRequest]);
+
+    revalidateTag(`/blogs/${blogId}`);
+    revalidateTag(`author-${blog.authorId}`);
 
     return {
       success: true,

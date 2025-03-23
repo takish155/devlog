@@ -1,6 +1,13 @@
 import { prisma } from "@/../prisma/prisma";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 
 export default async function getBlogById(blogId: string) {
+  "use cache";
+
+  cacheTag(`/blogs/${blogId}`);
+  cacheLife("max");
+
   const data = await prisma.blog.findUnique({
     where: {
       id: blogId,
@@ -12,6 +19,7 @@ export default async function getBlogById(blogId: string) {
       content: true,
       createdAt: true,
       updatedAt: true,
+      thumbnail: true,
       author: {
         select: {
           displayName: true,
@@ -25,3 +33,10 @@ export default async function getBlogById(blogId: string) {
 
   return data;
 }
+
+export const revalidateBlog = (blogId: string) => {
+  cacheTag(`/blogs/${blogId}`);
+};
+
+export type GetBlogByIdType = Awaited<ReturnType<typeof getBlogById>>;
+export type HeaderBlogPageType = GetBlogByIdType;

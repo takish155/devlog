@@ -1,20 +1,30 @@
-import BlogCard from "@/components/blogs/BlogCard";
+import BlogSection from "@/components/home/BlogSection";
+import StaffPickedSection from "@/components/home/StaffPickedSection";
+import BlogCardSkeleton from "@/components/sekeletons/BlogCardSkeleton";
 import Main from "@/components/ui/main";
-import { Separator } from "@/components/ui/separator";
-import getHomeBlogs from "@/lib/fetcher/getHomeBlogs";
-import React from "react";
+import getStaffPickedBlogs from "@/lib/fetcher/blogs/getStaffPickedBlogs";
+import React, { Suspense } from "react";
 
-const HomePage = async () => {
-  const blogs = await getHomeBlogs();
+export const experimental_ppr = true;
+
+const HomePage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const [staffPickedBlog, { orderBy }] = await Promise.all([
+    getStaffPickedBlogs(),
+    searchParams,
+  ]);
 
   return (
-    <Main>
-      {blogs.map((data) => (
-        <>
-          <BlogCard key={data.id} data={data} />
-          <Separator className="my-8 max-w-[800px] mx-auto" />
-        </>
-      ))}
+    <Main className="flex justify-center gap-[5%] max-w-[1000px]">
+      {/* None cached data */}
+      <Suspense fallback={<BlogCardSkeleton />}>
+        <BlogSection orderBy={orderBy as string} />
+      </Suspense>
+      {/* Cached data */}
+      <StaffPickedSection staffPickedBlog={staffPickedBlog} />
     </Main>
   );
 };

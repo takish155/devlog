@@ -1,11 +1,10 @@
 import { Link } from "@/i18n/routing";
 import React from "react";
 import { Separator } from "@/components/ui/separator";
-import GuestNav from "./GuestNav";
 import { SearchInput } from "./SearchInput";
 import MobileSearch from "./mobile/MobileSearch";
-import UserNav from "./user/UserNav";
 import Nav from "./Nav";
+import { Button } from "@/components/ui/button";
 
 const Header = async () => {
   return (
@@ -21,10 +20,7 @@ const Header = async () => {
             <SearchInput />
           </div>
         </div>
-        <nav className="flex gap-2">
-          <MobileSearch />
-          <Nav />
-        </nav>
+        <Nav />
       </div>
       <Separator />
     </header>

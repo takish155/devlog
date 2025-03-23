@@ -1,21 +1,19 @@
 "use client";
 
-import { Session } from "next-auth";
+import useSessionHook, { UseSessionHook } from "@/hooks/useSessionHook";
 import { createContext, useContext } from "react";
 
-const SessionContext = createContext<Session | null>(null);
+const SessionContext = createContext<UseSessionHook | null>(null);
 
 export const SessionProvider = ({
   children,
-  session,
 }: {
   children: React.ReactNode;
-  session: Session | null;
 }) => {
+  const state = useSessionHook();
+
   return (
-    <SessionContext.Provider value={session}>
-      {children}
-    </SessionContext.Provider>
+    <SessionContext.Provider value={state}>{children}</SessionContext.Provider>
   );
 };
 

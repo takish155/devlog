@@ -4,13 +4,13 @@ export const blogCommentSchema = z.object({
   content: z
     .string()
     .nonempty({
-      message: "errors.commentEmptyError",
+      message: "form.errors.commentEmptyError",
     })
     .min(3, {
-      message: "errors.minCommentError",
+      message: "form.errors.minCommentError",
     })
     .max(1000, {
-      message: "errors.maxCommentError",
+      message: "form.errors.maxCommentError",
     }),
 });
 

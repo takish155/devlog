@@ -1,5 +1,7 @@
 import { prisma } from "@/../prisma/prisma";
-import { auth } from "@/auth";
+import authMiddleware from "@/middlewares/authMiddleware";
+import { handleMiddleware } from "@/middlewares/handleMiddleware";
+import { Session } from "next-auth";
 
 export type GetBlogLikeCountResponse =
   | {
@@ -22,10 +24,15 @@ export async function GET(
   { params }: { params: Promise<{ blogId: string }> }
 ) {
   try {
-    const sessionRequest = auth();
-    const [session, { blogId }] = await Promise.all([sessionRequest, params]);
+    const middlewareRequest = handleMiddleware({
+      middleware: [authMiddleware],
+    });
+    const [middleware, { blogId }] = await Promise.all([
+      middlewareRequest,
+      params,
+    ]);
 
-    if (!session) {
+    if (!middleware.pass) {
       const likeCount = await prisma.blogLike.count({
         where: { blogId },
       });
@@ -40,6 +47,8 @@ export async function GET(
         status: 200,
       });
     }
+
+    const session: Session = middleware.passedData![0];
 
     const [userLike, likeCount] = await Promise.all([
       prisma.blogLike.findFirst({

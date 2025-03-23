@@ -13,3 +13,9 @@ export const routing = defineRouting({
 // that will consider the routing configuration
 export const { Link, redirect, usePathname, useRouter, getPathname } =
   createNavigation(routing);
+
+export const revalidatePath = (path: string) => {
+  routing.locales.forEach((locale) => {
+    revalidatePath(`/${locale}${path}`);
+  });
+};

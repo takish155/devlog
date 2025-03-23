@@ -5,8 +5,8 @@ import React from "react";
 import Markdown from "../ui/markdown";
 import BlogCard from "./BlogCard";
 import { useSession } from "@/contexts/SessionProvider";
-import { Separator } from "../ui/separator";
 import { useTranslations } from "next-intl";
+import Spinner from "../ui/spinner";
 
 interface PreviewBlogTabProps {
   context: () => ReturnType<typeof useHandleCreateBlogContext>;
@@ -14,13 +14,16 @@ interface PreviewBlogTabProps {
 
 const PreviewBlogTab = ({ context }: PreviewBlogTabProps) => {
   const { watch } = context()!;
-  const session = useSession();
+  const { isLoading, session } = useSession()!;
 
   const t = useTranslations("BlogPage");
 
   const title = watch("title");
   const description = watch("description");
   const content = watch("content");
+  const thumbnail = watch("thumbnail");
+
+  if (isLoading) return <Spinner />;
 
   return (
     <section>
@@ -30,6 +33,7 @@ const PreviewBlogTab = ({ context }: PreviewBlogTabProps) => {
           title,
           description,
           createdAt: new Date(),
+          thumbnail: thumbnail ?? "",
           author: {
             displayName: session?.user?.displayName,
             image: session?.user?.image,
@@ -40,7 +44,6 @@ const PreviewBlogTab = ({ context }: PreviewBlogTabProps) => {
           id: "",
         }}
       />
-      <Separator className="my-20" />
       <Markdown>{content ? content : t("preview.noContent")}</Markdown>
     </section>
   );

@@ -1,37 +1,37 @@
 "use server";
 
-import { auth } from "@/auth";
-import { blogSchema, BlogSchema } from "@/schemas/blog.schema";
+import { BlogSchema } from "@/schemas/blog.schema";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/../prisma/prisma";
+import { handleMiddleware } from "@/middlewares/handleMiddleware";
+import authMiddleware from "@/middlewares/authMiddleware";
+import { Session } from "next-auth";
+import checkBlogBodyMiddleware from "@/middlewares/blogs/checkBlogBodyMiddleware";
 
 export default async function createBlog(data: BlogSchema) {
   try {
+    const { pass, message, status, passedData } = await handleMiddleware({
+      middleware: [authMiddleware, checkBlogBodyMiddleware],
+      data: { body: data },
+    });
+
+    if (!pass) {
+      return {
+        success: false,
+        message: message,
+        status: status,
+      };
+    }
+
+    const session: Session = passedData![0];
+
     const translation = getTranslations("CreateBlogPage.server");
-    const sessionRequest = auth();
-
-    const [t, session] = await Promise.all([translation, sessionRequest]);
-
-    if (!session)
-      return {
-        success: false,
-        message: t("notAuthenticated"),
-        status: 401,
-      };
-
-    const safeData = blogSchema.safeParse(data);
-    if (!safeData.success)
-      return {
-        success: false,
-        message: t("invalidRequestBody"),
-        status: 400,
-      };
-
-    const blog = await prisma.blog.create({
+    const blogPromise = prisma.blog.create({
       data: {
-        title: safeData.data.title,
-        description: safeData.data.description,
-        content: safeData.data.content,
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        thumbnail: data.thumbnail ?? "",
         author: {
           connect: {
             id: session.user?.id,
@@ -39,6 +39,8 @@ export default async function createBlog(data: BlogSchema) {
         },
       },
     });
+
+    const [t, blog] = await Promise.all([translation, blogPromise]);
 
     return {
       success: true,

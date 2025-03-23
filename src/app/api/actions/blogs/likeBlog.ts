@@ -1,41 +1,42 @@
 "use server";
 
-import { auth } from "@/auth";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/../prisma/prisma";
+import { handleMiddleware } from "@/middlewares/handleMiddleware";
+import authMiddleware from "@/middlewares/authMiddleware";
+import blogExistsMiddleware from "@/middlewares/blogs/blogExistsMiddleware";
+import { Session } from "next-auth";
+import { revalidateTag } from "next/cache";
 
 export default async function likeBlog(blogId: string) {
   try {
     const translation = getTranslations("BlogPage.server");
-    const sessionRequest = auth();
 
-    const [t, session] = await Promise.all([translation, sessionRequest]);
-
-    if (!session)
-      return {
-        success: false,
-        message: t("errors.notAuthenticated"),
-        status: 401,
-      };
-
-    const blog = await prisma.blog.findUnique({
-      where: {
-        id: blogId,
+    const { pass, message, passedData, status } = await handleMiddleware({
+      middleware: [authMiddleware, blogExistsMiddleware],
+      data: {
+        blogId,
       },
     });
-    if (!blog) {
+
+    if (!pass) {
       return {
         success: false,
-        message: t("errors.notFound"),
-        status: 404,
+        message: message,
+        status: status,
       };
     }
-    const blogLike = await prisma.blogLike.findFirst({
+
+    const session: Session = passedData![0];
+    const blog = passedData![1];
+
+    const blogRequest = prisma.blogLike.findFirst({
       where: {
         blogId,
         userId: session.user?.id,
       },
     });
+    const [t, blogLike] = await Promise.all([translation, blogRequest]);
 
     // If the user liked the blog, unlike it
     if (blogLike) {
@@ -56,6 +57,9 @@ export default async function likeBlog(blogId: string) {
           },
         }),
       ]);
+
+      revalidateTag(`/blogs/${blogId}/likes/count`);
+      revalidateTag(`/blogs/${blogId}/likes/${session.user?.id}`);
 
       return {
         success: true,
@@ -95,6 +99,9 @@ export default async function likeBlog(blogId: string) {
         },
       }),
     ]);
+
+    revalidateTag(`/blogs/${blogId}/likes/count`);
+    revalidateTag(`/blogs/${blogId}/likes/${session.user?.id}`);
 
     return {
       success: true,

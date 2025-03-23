@@ -53,6 +53,7 @@ const EditBlogPage = async ({
                 title: blog?.title ?? "",
                 description: blog?.description ?? "",
                 content: blog?.content ?? "",
+                thumbnail: blog?.thumbnail ?? "",
               }}
             />
           </TabsContent>

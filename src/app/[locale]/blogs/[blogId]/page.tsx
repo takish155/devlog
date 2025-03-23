@@ -1,11 +1,36 @@
 import Main from "@/components/ui/main";
-import React from "react";
-import Markdown from "@/components/ui/markdown";
+import React, { Suspense } from "react";
 import getBlogById from "@/lib/fetcher/getBlogById";
-import Profile from "@/components/ui/profile";
-import { Link } from "@/i18n/routing";
-import { Separator } from "@/components/ui/separator";
-import BlogActions from "@/components/blogs/blog-actions/BlogActions";
+import BlogContentSection from "@/components/blogs/BlogContentSection";
+import AuthorOtherBlogSection from "@/components/blogs/AuthorOtherBlogSection";
+import { prisma } from "../../../../../prisma/prisma";
+import AuthorOtherBlogSectionSkeleton from "@/components/sekeletons/blogs/AuthorOtherBlogSectionSkeleton";
+import getBlogPageMetadata from "@/lib/meta/getBlogPageMetadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ blogId: string }>;
+}) {
+  const { blogId } = await params;
+
+  const meta = await getBlogPageMetadata(blogId);
+
+  return meta;
+}
+export async function generateStaticParams() {
+  const blogs = await prisma.blog.findMany({
+    select: {
+      id: true,
+    },
+  });
+
+  return blogs.map((blog) => ({
+    blogId: blog.id,
+  }));
+}
+
+export const experimental_ppr = true;
 
 const BlogPage = async ({
   params,
@@ -16,36 +41,18 @@ const BlogPage = async ({
 
   const data = await getBlogById(blogId);
 
-  return (
-    <Main className="max-w-[1000px]">
-      <section>
-        {/* Title / Description */}
-        <div className="mb-5">
-          <h2 className="font-bold text-5xl max-lg:text-4xl max-md:text-3xl max-sm:text-xl">
-            {data?.title}
-          </h2>
-          <p>{data?.description}</p>
-        </div>
+  if (!data) return null;
 
-        {/* Author & Info */}
-        <div className="flex gap-3 mb-3 items-center">
-          <Profile src={data?.author.image ?? ""} />
-          <div className="text-xs">
-            <p className="font-bold">
-              <Link href={`/users/${data?.author.username}`}>
-                {data?.author.displayName}
-              </Link>
-            </p>
-            <p>
-              {data?.createdAt.toLocaleString()}{" "}
-              {data?.updatedAt && <span>{}</span>}
-            </p>
-          </div>
-        </div>
-      </section>
-      <BlogActions blogId={blogId} authorId={data?.author.id as string} />
-      <Separator className="mb-10 mt-3" />
-      <Markdown>{data?.content ?? ""}</Markdown>
+  return (
+    <Main className="flex max-w-[1000px] justify-center gap-[5%]">
+      <BlogContentSection data={data} blogId={blogId} />
+      <Suspense fallback={<AuthorOtherBlogSectionSkeleton />}>
+        <AuthorOtherBlogSection
+          blogId={blogId}
+          authorId={data.author.id}
+          displayname={data.author.displayName}
+        />
+      </Suspense>
     </Main>
   );
 };

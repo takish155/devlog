@@ -12,6 +12,7 @@ export const blogSchema = z.object({
     .nonempty({ message: "contentEmptyError" })
     .min(10, { message: "minContentError" })
     .max(15000, { message: "maxContentError" }),
+  thumbnail: z.string().optional(),
 });
 
 export type BlogSchema = z.infer<typeof blogSchema>;

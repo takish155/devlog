@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import InputContainer from "@/components/ui/input-cotainer";
 import { Textarea } from "@/components/ui/textarea";
 import { useHandleCreateBlogContext } from "@/contexts/CreateBlogContext";
+import { UploadButton } from "@uploadthing/react";
 import { useTranslations } from "next-intl";
 import React from "react";
 
@@ -54,7 +55,10 @@ const CreateBlogForm = () => {
           className="min-h-[50vh]"
         ></Textarea>
       </InputContainer>
-      <Button disabled={isPending}>{t("submit")}</Button>
+      <InputContainer id="thumbnail" label={t("thumbnail")}>
+        <UploadButton />
+      </InputContainer>
+      w<Button disabled={isPending}>{t("submit")}</Button>
     </form>
   );
 };

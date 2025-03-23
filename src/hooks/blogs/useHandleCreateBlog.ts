@@ -17,6 +17,7 @@ const useHandleCreateBlog = () => {
     formState: { errors },
     handleSubmit,
     watch,
+    setValue,
   } = useForm<BlogSchema>({
     resolver: zodResolver(blogSchema),
   });
@@ -52,6 +53,7 @@ const useHandleCreateBlog = () => {
     mutate,
     serverResponse,
     isPending,
+    setValue,
   };
 };
 

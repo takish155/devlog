@@ -1,18 +1,35 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { BlogCommentCardProps } from "@/app/api/blogs/[blogId]/comments/route";
+import { createContext, useContext, useState } from "react";
 
-const BlogCommentContext = createContext<null>(null);
+const useHandleInitialState = (initialCount: number) => {
+  const [comment, setComment] = useState<BlogCommentCardProps[]>([]);
+  const [commentCount, setCommentCount] = useState(initialCount);
+
+  return {
+    comment,
+    setComment,
+    commentCount,
+    setCommentCount,
+  };
+};
+
+type UseCommentType = ReturnType<typeof useHandleInitialState>;
+
+const BlogCommentContext = createContext<null | UseCommentType>(null);
 
 export const BlogCommentProvider = ({
   children,
-  blogId,
+  initialCount,
 }: {
   children: React.ReactNode;
-  blogId: string;
+  initialCount: number;
 }) => {
+  const state = useHandleInitialState(initialCount);
+
   return (
-    <BlogCommentContext.Provider value={null}>
+    <BlogCommentContext.Provider value={state}>
       {children}
     </BlogCommentContext.Provider>
   );

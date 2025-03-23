@@ -85,8 +85,6 @@ export default async function signUp(data: SignUpSchema) {
       user,
     };
   } catch (error) {
-    console.log(error);
-
     return {
       success: false,
       status: 500,

@@ -10,6 +10,7 @@ import QueryProvider from "@/contexts/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import { SessionProvider } from "@/contexts/SessionProvider";
+import Footer from "@/components/Footer";
 
 const englishFont = Poppins({
   variable: "--font-english",
@@ -28,6 +29,10 @@ export const metadata: Metadata = {
   description: "",
 };
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function LocaleLayout({
   children,
   params,
@@ -35,22 +40,17 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const paramRequest = params;
+  const messageRequest = getMessages();
 
-  // Ensure that the incoming `locale` is valid
+  const [messages, { locale }] = await Promise.all([
+    messageRequest,
+    paramRequest,
+  ]);
+  // todo: fix not found pages
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
-
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messageRequest = getMessages();
-  const sessionRequest = auth();
-
-  const [messages, session] = await Promise.all([
-    messageRequest,
-    sessionRequest,
-  ]);
 
   return (
     <html lang={locale}>
@@ -60,10 +60,11 @@ export default async function LocaleLayout({
         } antialiased ${locale === "ja" ? "font-japanese" : "font-english"}`}
       >
         <QueryProvider>
-          <SessionProvider session={session}>
+          <SessionProvider>
             <NextIntlClientProvider messages={messages}>
               <Header />
               {children}
+              <Footer />
               <Toaster />
             </NextIntlClientProvider>
           </SessionProvider>

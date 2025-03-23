@@ -1,14 +1,24 @@
-import commentBlog from "@/app/api/actions/blogs/commentBlog";
+import commentBlog from "@/app/api/actions/blogs/comments/commentBlog";
+import { BlogCommentCardProps } from "@/app/api/blogs/[blogId]/comments/route";
+import { useBlogCommentContext } from "@/contexts/BlogCommentProvider";
 import {
   blogCommentSchema,
   BlogCommentType,
 } from "@/schemas/blogComment.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import React from "react";
+import { useTranslations } from "next-intl";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-const useHandleCommentBlog = (blogId: string) => {
+const useHandleCommentBlog = (
+  blogId: string,
+  setComment: Dispatch<SetStateAction<BlogCommentCardProps[]>>,
+  setCommentCount: Dispatch<SetStateAction<number>>
+) => {
+  const t = useTranslations("BlogPage.comment");
+
   const {
     register,
     formState: { errors },
@@ -18,20 +28,38 @@ const useHandleCommentBlog = (blogId: string) => {
     resolver: zodResolver(blogCommentSchema),
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data: BlogCommentType, parentCommentId?: string) =>
-      commentBlog(data, blogId, parentCommentId),
-  });
+  const { mutate, isPending, data } = useMutation({
+    mutationFn: (body: { data: BlogCommentType; parentCommentId?: string }) =>
+      commentBlog(body.data, blogId, body.parentCommentId),
+    onSettled: (res) => {
+      if (!res?.success) {
+        toast.error(t("server.errors.title"), {
+          description: t("server.errors.somethingWentWrong"),
+        });
 
-  // todo: add these to form, add a mechanic where when user submits a comment,
-  // it will be added to the list of comments without refreshing the page
+        return;
+      }
+      reset();
+
+      toast.success(t("server.success.title"), {
+        description: res.message,
+      });
+
+      // Handle automatic addition of comment
+      setComment!((prev) => {
+        return [res.data!, ...prev];
+      });
+
+      setCommentCount!((prev) => prev + 1);
+    },
+  });
 
   return {
     register,
     errors,
     isPending,
     mutate,
-    reset,
+    data,
     handleSubmit,
   };
 };

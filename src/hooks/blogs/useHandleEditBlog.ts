@@ -17,6 +17,7 @@ const useHandleEditBlog = () => {
     formState: { errors },
     handleSubmit,
     watch,
+    setValue,
   } = useForm<BlogSchema>({
     resolver: zodResolver(blogSchema),
   });
@@ -51,6 +52,7 @@ const useHandleEditBlog = () => {
     mutate,
     serverResponse,
     isPending,
+    setValue,
   };
 };
 
